@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/terraform-aws-base-networking
+    working_directory: ~/terraform-aws-bastion
     docker:
       - image: ruby:2.3.1
     steps:
