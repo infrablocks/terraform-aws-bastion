@@ -1,27 +1,36 @@
-variable "vpc_cidr" {}
 variable "region" {}
-variable "availability_zones" {}
+variable "vpc_id" {}
+variable "subnet_ids" {
+  type = "list"
+}
 
 variable "component" {}
 variable "deployment_identifier" {}
-variable "dependencies" {
-  default = ""
-}
 
-variable "bastion_ami" {}
-variable "bastion_instance_type" {
+variable "ami" {}
+variable "instance_type" {
   default = "t2.nano"
 }
-variable "bastion_ssh_public_key_path" {}
-variable "bastion_ssh_allow_cidrs" {}
+variable "ssh_public_key_path" {}
 
-variable "domain_name" {}
-variable "public_zone_id" {}
-variable "private_zone_id" {}
-
-variable "include_lifecycle_events" {
-  default = "yes"
+variable "allowed_cidrs" {
+  type = "list"
 }
-variable "infrastructure_events_bucket" {
-  default = ""
+variable "egress_cidrs" {
+  type = "list"
+}
+
+variable "load_balancer_names" {
+  type = "list"
+  default = []
+}
+
+variable "minimum_instances" {
+  default = 1
+}
+variable "maximum_instances" {
+  default = 1
+}
+variable "desired_instances" {
+  default = 1
 }

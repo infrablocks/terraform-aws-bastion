@@ -3,19 +3,58 @@ vpc_cidr: '10.1.0.0/16'
 region: 'eu-west-2'
 availability_zones: 'eu-west-2a,eu-west-2b'
 
-component: 'test'
+component: 'bastion'
 deployment_identifier: '<%= @deployment_identifier %>'
 dependencies: 'other,stuff'
-
-bastion_ami: 'ami-bb373ddf'
-bastion_user: 'centos'
-bastion_instance_type: 't2.medium'
-bastion_ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.public'
-bastion_ssh_private_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.private'
-bastion_ssh_allow_cidrs: "<%= @public_ip %>/32"
 
 domain_name: 'greasedscone.uk'
 public_zone_id: 'Z4Q2X3ESOZT4N'
 private_zone_id: 'Z2CDAFD23Q10HO'
 
 infrastructure_events_bucket: 'tobyclemson-open-source'
+
+listener_1_lb_port: 22
+listener_1_lb_protocol: 'TCP'
+listener_1_instance_port: 22
+listener_1_instance_protocol: 'TCP'
+listener_1_allow_cidr: '0.0.0.0/0'
+
+listeners: '[
+  {
+    lb_port = 22
+    lb_protocol = "TCP"
+    instance_port = 22
+    instance_protocol = "TCP"
+  }
+]'
+
+access_control: '[
+  {
+    lb_port = 22
+    instance_port = 22
+    allow_cidr = "<%= @public_ip %>/32"
+  }
+]'
+
+health_check_target: 'TCP:22'
+
+include_public_dns_record: "yes"
+include_private_dns_record: "yes"
+
+expose_to_public_internet: "yes"
+
+allowed_cidrs:
+  - '0.0.0.0/0'
+egress_cidrs:
+  - '10.0.0.0/8'
+  - '192.168.0.0/16'
+
+ami: 'ami-bb373ddf'
+user: 'centos'
+instance_type: 't2.medium'
+ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.public'
+ssh_private_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.private'
+
+minimum_instances: 1
+maximum_instances: 1
+desired_instances: 1

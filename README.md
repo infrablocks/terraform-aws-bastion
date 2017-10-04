@@ -1,5 +1,5 @@
-Terraform AWS Base Networking
-=============================
+Terraform AWS Bastion
+=====================
 
 [![CircleCI](https://circleci.com/gh/infrablocks/terraform-aws-base-networking.svg?style=svg)](https://circleci.com/gh/infrablocks/terraform-aws-base-networking)
 

@@ -1,5 +1,4 @@
 require 'awspec'
-require_relative '../awspec'
 require_relative '../terraform_module'
 
 shared_context :terraform do

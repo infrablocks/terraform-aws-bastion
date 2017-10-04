@@ -1,47 +1,83 @@
-resource "aws_key_pair" "bastion" {
-  key_name = "bastion-${var.component}-${var.deployment_identifier}"
-  public_key = "${file(var.bastion_ssh_public_key_path)}"
-}
+data "aws_availability_zones" "all" {}
 
-resource "aws_instance" "bastion" {
-  ami = "${var.bastion_ami}"
-  instance_type = "${var.bastion_instance_type}"
-  key_name = "${aws_key_pair.bastion.key_name}"
-  subnet_id = "${aws_subnet.public.0.id}"
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners = ["amazon"]
 
-  vpc_security_group_ids = [
-    "${aws_security_group.bastion.id}"
-  ]
+  name_regex = "^amzn-ami-hvm-\\d{4}\\.\\d{2}\\.\\d*"
 
-  tags {
-    Name = "bastion-${var.component}-${var.deployment_identifier}"
-    Component = "${var.component}"
-    DeploymentIdentifier = "${var.deployment_identifier}"
-    Role = "bastion"
+  filter {
+    name = "name"
+    values = ["amzn-ami-hvm-*-gp2"]
   }
 }
 
-resource "aws_eip" "bastion" {
-  vpc = true
-  instance = "${aws_instance.bastion.id}"
+resource "aws_key_pair" "bastion" {
+  key_name = "${var.component}-${var.deployment_identifier}"
+  public_key = "${file(var.ssh_public_key_path)}"
 }
 
-resource "aws_route53_record" "bastion" {
-  zone_id = "${var.public_zone_id}"
-  name = "bastion-${var.component}-${var.deployment_identifier}.${var.domain_name}"
-  type = "A"
-  ttl = "60"
-  records = [
-    "${aws_eip.bastion.public_ip}"
+resource "aws_launch_configuration" "bastion" {
+  name_prefix = "${var.component}-${var.deployment_identifier}"
+  image_id = "${coalesce(var.ami, data.aws_ami.amazon_linux.id)}"
+  instance_type = "${var.instance_type}"
+  key_name = "${aws_key_pair.bastion.key_name}"
+
+  security_groups = [
+    "${aws_security_group.bastion.id}"
   ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "bastion" {
+  name = "${var.component}-${var.deployment_identifier}"
+
+  vpc_zone_identifier = [
+    "${coalescelist(var.subnet_ids, data.aws_availability_zones.all.names)}"
+  ]
+
+  launch_configuration = "${aws_launch_configuration.bastion.name}"
+
+  load_balancers = ["${var.load_balancer_names}"]
+
+  min_size = "${var.minimum_instances}"
+  max_size = "${var.maximum_instances}"
+  desired_capacity = "${var.desired_instances}"
+
+  tag {
+    key = "Name"
+    value = "${var.component}-${var.deployment_identifier}"
+    propagate_at_launch = true
+  }
+
+  tag{
+    key = "Component"
+    value = "${var.component}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key = "DeploymentIdentifier"
+    value = "${var.deployment_identifier}"
+    propagate_at_launch = true
+  }
+
+  tag{
+    key = "Role"
+    value = "bastion"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_security_group" "bastion" {
-  name = "bastion-${var.component}-${var.deployment_identifier}"
-  vpc_id = "${aws_vpc.base.id}"
+  name = "${var.component}-${var.deployment_identifier}"
+  vpc_id = "${var.vpc_id}"
 
   tags {
-    Name = "bastion-sg-${var.component}-${var.deployment_identifier}"
+    Name = "${var.component}-${var.deployment_identifier}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"
   }
@@ -51,7 +87,7 @@ resource "aws_security_group" "bastion" {
     to_port = 22
     protocol = "tcp"
     cidr_blocks = [
-      "${split(",", var.bastion_ssh_allow_cidrs)}"
+      "${var.allowed_cidrs}"
     ]
   }
 
@@ -60,17 +96,17 @@ resource "aws_security_group" "bastion" {
     to_port = 22
     protocol = "tcp"
     cidr_blocks = [
-      "${var.vpc_cidr}"
+      "${var.egress_cidrs}"
     ]
   }
 }
 
 resource "aws_security_group" "open_to_bastion" {
   name = "open-to-bastion-${var.component}-${var.deployment_identifier}"
-  vpc_id = "${aws_vpc.base.id}"
+  vpc_id = "${var.vpc_id}"
 
   tags {
-    Name = "open-to-bastion-sg-${var.component}-${var.deployment_identifier}"
+    Name = "open-to-bastion-${var.component}-${var.deployment_identifier}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"
   }
