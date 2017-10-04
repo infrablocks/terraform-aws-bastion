@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'socket'
 require 'net/ssh'
 
 describe 'bastion' do
@@ -147,6 +148,21 @@ describe 'bastion' do
 
   context 'connectivity' do
     it 'is reachable using the corresponding private SSH key' do
+      attempts = 10
+      interval = 30
+      reachable = false
+
+      while !reachable && attempts > 0
+        begin
+          TCPSocket.new(
+              "#{vars.component}-#{vars.deployment_identifier}.#{vars.domain_name}", 22)
+          reachable = true
+        rescue
+          attempts -= 1
+          sleep interval
+        end
+      end
+
       expect {
         ssh = Net::SSH.start(
             "#{vars.component}-#{vars.deployment_identifier}.#{vars.domain_name}",
