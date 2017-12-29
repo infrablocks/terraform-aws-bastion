@@ -10,7 +10,7 @@ variable "subnet_ids" {
 }
 
 variable "component" {
-  description = "The component this network will contain."
+  description = "The name of this component."
 }
 variable "deployment_identifier" {
   description = "An identifier for this instantiation."
@@ -37,7 +37,7 @@ variable "egress_cidrs" {
 }
 
 variable "load_balancer_names" {
-  description = "The load balancers to update on autoscaling events."
+  description = "The names of the load balancers to update on autoscaling events."
   type = "list"
   default = []
 }
