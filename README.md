@@ -3,9 +3,14 @@ Terraform AWS Bastion
 
 [![CircleCI](https://circleci.com/gh/infrablocks/terraform-aws-bastion.svg?style=svg)](https://circleci.com/gh/infrablocks/terraform-aws-bastion)
 
-A Terraform module for deploying a bastion into a base network in AWS.
+A Terraform module for deploying a supervised bastion into a base network in 
+AWS.
 
-The network consists of:
+The bastion requires:
+* An existing base network
+* One or more existing load balancers
+
+The bastion consists of:
 * An autoscaling group and launch configuration for bastion instances 
   configured with the supplied SSH key updating the supplied load balancers.
 * A security group allowing access to the bastion from the load balancers.
@@ -46,7 +51,19 @@ module "bastion" {
 }
 ```
 
-Executing `terraform get` will fetch the module.
+As mentioned above, the bastion deploys into an existing base network. 
+Whilst the base network can be created using any mechanism you like, the 
+[AWS Base Networking](https://github.com/infrablocks/terraform-aws-base-networking)
+module will create everything you need. See the 
+[docs](https://github.com/infrablocks/terraform-aws-base-networking/blob/master/README.md)
+for usage instructions.
+
+Similarly, the bastion is reachable through one or more load balancers.
+Whilst the load balancers can be created using any mechanism you like, the
+[AWS Classic Load Balancer](https://github.com/infrablocks/terraform-aws-classic-load-balancer)
+module will create everything you need. See the 
+[docs](https://github.com/infrablocks/terraform-aws-classic-load-balancer/blob/master/README.md)
+for usage instructions.
 
 
 ### Inputs
