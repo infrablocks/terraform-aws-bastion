@@ -16,7 +16,8 @@ module "base_network" {
 }
 
 module "classic_load_balancer" {
-  source = "git@github.com:infrablocks/terraform-aws-classic-load-balancer.git//src"
+  source  = "infrablocks/classic-load-balancer/aws"
+  version = "0.1.8"
 
   region = "${var.region}"
   vpc_id = "${module.base_network.vpc_id}"
