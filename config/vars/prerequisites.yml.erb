@@ -1,6 +1,6 @@
 ---
-vpc_cidr: '10.1.0.0/16'
 region: 'eu-west-2'
+vpc_cidr: '10.1.0.0/16'
 availability_zones: 'eu-west-2a,eu-west-2b'
 
 component: 'bastion'
@@ -43,18 +43,6 @@ include_private_dns_record: "yes"
 
 expose_to_public_internet: "yes"
 
-allowed_cidrs:
-  - '0.0.0.0/0'
 egress_cidrs:
   - '10.0.0.0/8'
   - '192.168.0.0/16'
-
-ami: 'ami-bb373ddf'
-user: 'centos'
-instance_type: 't2.medium'
-ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.public'
-ssh_private_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.private'
-
-minimum_instances: 1
-maximum_instances: 1
-desired_instances: 1

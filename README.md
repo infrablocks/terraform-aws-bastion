@@ -3,19 +3,11 @@ Terraform AWS Bastion
 
 [![CircleCI](https://circleci.com/gh/infrablocks/terraform-aws-base-networking.svg?style=svg)](https://circleci.com/gh/infrablocks/terraform-aws-base-networking)
 
-A Terraform module for building a base network in AWS.
+A Terraform module for deploying a bastion into a base network in AWS.
 
 The network consists of:
-* Public and private subnets for each supplied availability zone
-* A NAT gateway for outbound Internet connectivity
-* Routes from the public subnets to the Internet gateway
-* Routes from the private subnets to the NAT
 * A bastion host configured with the supplied SSH key
-* A security group for the bastion limited to the supplied IP ranges
 * A DNS entry in the supplied public zone for the bastion
-* Standard tags for all resources
-* A notification (in the form of an S3 object) in an S3 bucket on VPC creation
-  (optional)
 
 ![Diagram of infrastructure managed by this module](/docs/architecture.png?raw=true)
 

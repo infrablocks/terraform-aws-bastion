@@ -5,7 +5,8 @@ require 'net/ssh'
 describe 'bastion' do
   context 'launch configuration' do
     subject {
-      launch_configuration(output_with_name('launch_configuration_name'))
+      launch_configuration(
+          output_for(:harness, 'launch_configuration_name'))
     }
 
     it {should exist}
@@ -22,7 +23,8 @@ describe 'bastion' do
     }
 
     it 'has a name containing the component and deployment_identifier' do
-      launch_configuration_name = output_with_name('launch_configuration_name')
+      launch_configuration_name =
+          output_for(:harness, 'launch_configuration_name')
 
       expect(launch_configuration_name)
           .to(match(/#{vars.component}/))
@@ -43,18 +45,18 @@ describe 'bastion' do
     its(:desired_capacity) {should eq(vars.desired_instances)}
 
     its(:launch_configuration_name) do
-      should eq(output_with_name('launch_configuration_name'))
+      should eq(output_for(:harness, 'launch_configuration_name'))
     end
 
     it 'uses the provided subnets' do
       expect(subject.vpc_zone_identifier.split(','))
           .to(contain_exactly(
-                  *output_with_name('private_subnet_ids').split(',')))
+                  *output_for(:prerequisites, 'private_subnet_ids').split(',')))
     end
 
     it 'uses the provided load balancer names' do
       expect(subject.load_balancer_names)
-          .to(contain_exactly(output_with_name('load_balancer_name')))
+          .to(contain_exactly(output_for(:prerequisites, 'load_balancer_name')))
     end
 
     it {should have_tag('Name')
@@ -68,7 +70,8 @@ describe 'bastion' do
   end
 
   context 'bastion security group' do
-    subject {security_group(output_with_name("bastion_security_group_id"))}
+    subject {security_group(
+        output_for(:harness, 'bastion_security_group_id'))}
 
     it {should exist}
 
@@ -79,7 +82,7 @@ describe 'bastion' do
     it {should have_tag('DeploymentIdentifier')
                    .value(vars.deployment_identifier)}
 
-    its(:vpc_id) {should eq(output_with_name('vpc_id'))}
+    its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
 
     it 'allows inbound SSH for each supplied CIDR' do
       allowed_cidrs = vars.allowed_cidrs
@@ -114,11 +117,13 @@ describe 'bastion' do
 
   context 'open-to-bastion security group' do
     subject {
-      security_group(output_with_name('open_to_bastion_security_group_id'))
+      security_group(
+          output_for(:harness, 'open_to_bastion_security_group_id'))
     }
 
     let(:bastion_security_group) {
-      security_group(output_with_name("bastion_security_group_id"))
+      security_group(
+          output_for(:harness, 'bastion_security_group_id'))
     }
 
     it {should exist}
@@ -130,7 +135,7 @@ describe 'bastion' do
     it {should have_tag('DeploymentIdentifier')
                    .value(vars.deployment_identifier)}
 
-    its(:vpc_id) {should eq(output_with_name('vpc_id'))}
+    its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
 
     it 'allows inbound SSH from the bastion' do
       permission = subject.ip_permissions.find do |permission|
@@ -150,28 +155,33 @@ describe 'bastion' do
     it 'is reachable using the corresponding private SSH key' do
       attempts = 10
       interval = 30
-      reachable = false
-
-      while !reachable && attempts > 0
-        begin
-          TCPSocket.new(
-              "#{vars.component}-#{vars.deployment_identifier}.#{vars.domain_name}", 22)
-          reachable = true
-        rescue
-          attempts -= 1
-          sleep interval
-        end
-      end
+      succeeded = false
+      exception = nil
 
       expect {
-        ssh = Net::SSH.start(
-            "#{vars.component}-#{vars.deployment_identifier}.#{vars.domain_name}",
-            user = vars.user,
-            options = {
-                keys: vars.ssh_private_key_path
-            })
-        ssh.exec!('ls -al')
-        ssh.close
+        while !succeeded && attempts > 0
+          begin
+            ssh = Net::SSH.start(
+                "#{vars.component}-#{vars.deployment_identifier}.#{vars.domain_name}",
+                user = vars.user,
+                options = {
+                    keys: vars.ssh_private_key_path,
+                    verbose: :info,
+                    paranoid: false
+                })
+            ssh.exec!('ls -al')
+            ssh.close
+            succeeded = true
+          rescue Exception => e
+            attempts -= 1
+            exception = e
+            sleep interval
+          end
+        end
+
+        unless succeeded
+          raise exception
+        end
       }.not_to raise_error
     end
   end

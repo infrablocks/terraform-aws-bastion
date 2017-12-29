@@ -1,5 +1,6 @@
 module "base_network" {
-  source = "git@github.com:infrablocks/terraform-aws-base-networking.git//src"
+  source  = "infrablocks/base-networking/aws"
+  version = "0.1.20"
 
   vpc_cidr = "${var.vpc_cidr}"
   region = "${var.region}"
@@ -9,13 +10,6 @@ module "base_network" {
   deployment_identifier = "${var.deployment_identifier}"
   dependencies = "${var.dependencies}"
 
-  bastion_ami = "${var.ami}"
-  bastion_instance_type = "${var.instance_type}"
-  bastion_ssh_public_key_path = "${var.ssh_public_key_path}"
-  bastion_ssh_allow_cidrs = "${join(",", var.allowed_cidrs)}"
-
-  domain_name = "${var.domain_name}"
-  public_zone_id = "${var.public_zone_id}"
   private_zone_id = "${var.private_zone_id}"
 
   infrastructure_events_bucket = "${var.infrastructure_events_bucket}"
@@ -46,29 +40,4 @@ module "classic_load_balancer" {
   include_private_dns_record = "${var.include_private_dns_record}"
 
   expose_to_public_internet = "${var.expose_to_public_internet}"
-}
-
-module "bastion" {
-  source = "../../../src"
-
-  region = "${var.region}"
-  vpc_id = "${module.base_network.vpc_id}"
-  subnet_ids = "${split(",", module.base_network.private_subnet_ids)}"
-
-  component = "${var.component}"
-  deployment_identifier = "${var.deployment_identifier}"
-
-  ami = "${var.ami}"
-  instance_type = "${var.instance_type}"
-
-  ssh_public_key_path = "${var.ssh_public_key_path}"
-
-  allowed_cidrs = "${var.allowed_cidrs}"
-  egress_cidrs = "${var.egress_cidrs}"
-
-  load_balancer_names = ["${module.classic_load_balancer.name}"]
-
-  minimum_instances = "${var.minimum_instances}"
-  maximum_instances = "${var.maximum_instances}"
-  desired_instances = "${var.desired_instances}"
 }
