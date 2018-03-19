@@ -8,7 +8,13 @@ output "bastion_security_group_id" {
   value = "${aws_security_group.bastion.id}"
 }
 
+# For backwards compatibility.
 output "open_to_bastion_security_group_id" {
   description = "The ID of the security group allowing access from the bastion."
-  value = "${aws_security_group.open_to_bastion.id}"
+  value = "${aws_security_group.allow_ssh_from_bastion.id}"
+}
+
+output "allow_ssh_from_bastion_security_group_id" {
+  description = "The ID of the security group allowing ssh access from the bastion."
+  value = "${aws_security_group.allow_ssh_from_bastion.id}"
 }
