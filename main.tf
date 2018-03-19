@@ -80,24 +80,7 @@ resource "aws_security_group" "allow_ssh_to_bastion" {
     Name = "allow-ssh-to-bastion-${var.component}-${var.deployment_identifier}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"
-  }
-
-  tag {
-    key = "Component"
-    value = "${var.component}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "DeploymentIdentifier"
-    value = "${var.deployment_identifier}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "Role"
-    value = "bastion"
-    propagate_at_launch = true
+    Role = "bastion"
   }
 
   ingress {
@@ -127,24 +110,7 @@ resource "aws_security_group" "allow_ssh_from_bastion" {
     Name = "allow-ssh-from-bastion-${var.component}-${var.deployment_identifier}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"
-  }
-
-  tag {
-    key = "Component"
-    value = "${var.component}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "DeploymentIdentifier"
-    value = "${var.deployment_identifier}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "Role"
-    value = "bastion"
-    propagate_at_launch = true
+    Role = "bastion"
   }
 
   ingress {
