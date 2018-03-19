@@ -5,7 +5,7 @@ output "launch_configuration_name" {
 
 output "bastion_security_group_id" {
   description = "The ID of the bastion's security group."
-  value = "${aws_security_group.bastion.id}"
+  value = "${aws_security_group.allow_ssh_to_bastion.id}"
 }
 
 # For backwards compatibility.

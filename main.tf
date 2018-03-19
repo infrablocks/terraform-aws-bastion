@@ -24,7 +24,7 @@ resource "aws_launch_configuration" "bastion" {
   key_name = "${aws_key_pair.bastion.key_name}"
 
   security_groups = [
-    "${aws_security_group.bastion.id}"
+    "${aws_security_group.allow_ssh_to_bastion.id}"
   ]
 
   lifecycle {
