@@ -91,8 +91,9 @@ for usage instructions.
 | Name                                     | Description                                                          |
 |------------------------------------------|----------------------------------------------------------------------|
 | launch_configuration_name                | The name of the launch configuration for bastion instances           |
-| bastion_security_group_id                | The ID of the security group that allows ssh access to the bastion   |
+| allow_ssh_to_bastion_security_group_id   | The ID of the security group that allows ssh access to the bastion   |
 | allow_ssh_from_bastion_security_group_id | The ID of the security group that allows ssh access from the bastion |
+| bastion_security_group_id                | (deprecated)                                                         |
 | open_to_bastion_security_group_id        | (deprecated)                                                         |
 
 
