@@ -13,8 +13,8 @@ The bastion requires:
 The bastion consists of:
 * An autoscaling group and launch configuration for bastion instances 
   configured with the supplied SSH key updating the supplied load balancers.
-* A security group allowing access to the bastion from the load balancers.
-* A security group open to the bastion for use on protected instances.
+* A security group allowing SSH access to the bastion from the load balancers.
+* A security group allowing SSH access from the bastion, for assigning to protected instances.
 
 ![Diagram of infrastructure managed by this module](https://raw.githubusercontent.com/infrablocks/terraform-aws-bastion/master/docs/architecture.png)
 
@@ -78,8 +78,8 @@ for usage instructions.
 | ami                   | The ID of the AMI for the bastion instances                       | -       | yes      |
 | instance_type         | The instance type of the bastion instances                        | t2.nano | yes      |
 | ssh_public_key_path   | The absolute path of the SSH public key to use for bastion access | -       | yes      |
-| allowed_cidrs         | The CIDRs that are allowed to access the bastion                  | -       | yes      |
-| egress_cidrs          | The CIDRs that are reachable from the bastion                     | -       | yes      |
+| allowed_cidrs         | The CIDRs that are allowed to access the bastion (list)           | -       | yes      |
+| egress_cidrs          | The CIDRs that are reachable from the bastion (list)              | -       | yes      |
 | load_balancer_names   | The names of the load balancers to update on autoscaling events   | -       | yes      |
 | minimum_instances     | The minimum number of bastion instances                           | -       | yes      |
 | maximum_instances     | The maximum number of bastion instances                           | -       | yes      |
@@ -88,11 +88,12 @@ for usage instructions.
 
 ### Outputs
 
-| Name                              | Description                                                   |
-|-----------------------------------|---------------------------------------------------------------|
-| launch_configuration_name         | The name of the launch configuration for bastion instances    |
-| bastion_security_group_id         | The ID of the bastion's security group                        |
-| open_to_bastion_security_group_id | The ID of the security group allowing access from the bastion |
+| Name                                     | Description                                                          |
+|------------------------------------------|----------------------------------------------------------------------|
+| launch_configuration_name                | The name of the launch configuration for bastion instances           |
+| bastion_security_group_id                | The ID of the security group that allows ssh access to the bastion   |
+| allow_ssh_from_bastion_security_group_id | The ID of the security group that allows ssh access from the bastion |
+| open_to_bastion_security_group_id        | (deprecated)                                                         |
 
 
 Development
