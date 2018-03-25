@@ -14,12 +14,12 @@ describe 'bastion' do
     its(:image_id) {should eq(vars.ami)}
 
     its(:key_name) do
-      should eq("#{vars.component}-#{vars.deployment_identifier}")
+      should eq("bastion-#{vars.component}-#{vars.deployment_identifier}")
     end
 
     it {
       should have_security_group(
-                 "#{vars.component}-#{vars.deployment_identifier}")
+                 "allow-ssh-to-bastion-#{vars.component}-#{vars.deployment_identifier}")
     }
 
     it 'has a name containing the component and deployment_identifier' do
@@ -60,7 +60,7 @@ describe 'bastion' do
     end
 
     it {should have_tag('Name')
-                   .value("#{vars.component}-#{vars.deployment_identifier}")}
+                   .value("bastion-#{vars.component}-#{vars.deployment_identifier}")}
     it {should have_tag('Component')
                    .value(vars.component)}
     it {should have_tag('DeploymentIdentifier')
@@ -69,14 +69,14 @@ describe 'bastion' do
                    .value('bastion')}
   end
 
-  context 'bastion security group' do
+  context 'allow-ssh-to-bastion security group' do
     subject {security_group(
-        output_for(:harness, 'bastion_security_group_id'))}
+        output_for(:harness, 'allow_ssh_to_bastion_security_group_id'))}
 
     it {should exist}
 
     it {should have_tag('Name')
-                   .value("#{vars.component}-#{vars.deployment_identifier}")}
+                   .value("allow-ssh-to-bastion-#{vars.component}-#{vars.deployment_identifier}")}
     it {should have_tag('Component')
                    .value(vars.component)}
     it {should have_tag('DeploymentIdentifier')
@@ -115,21 +115,21 @@ describe 'bastion' do
     end
   end
 
-  context 'open-to-bastion security group' do
+  context 'allow-ssh-from-bastion security group' do
     subject {
       security_group(
-          output_for(:harness, 'open_to_bastion_security_group_id'))
+          output_for(:harness, 'allow_ssh_from_bastion_security_group_id'))
     }
 
     let(:bastion_security_group) {
       security_group(
-          output_for(:harness, 'bastion_security_group_id'))
+          output_for(:harness, 'allow_ssh_to_bastion_security_group_id'))
     }
 
     it {should exist}
 
     it {should have_tag('Name')
-                   .value("open-to-bastion-#{vars.component}-#{vars.deployment_identifier}")}
+                   .value("allow-ssh-from-bastion-#{vars.component}-#{vars.deployment_identifier}")}
     it {should have_tag('Component')
                    .value(vars.component)}
     it {should have_tag('DeploymentIdentifier')
