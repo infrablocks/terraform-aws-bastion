@@ -63,12 +63,8 @@ namespace :release do
   task :tag do
     repo = Git.open('.')
     tags = repo.tags
-    require 'pp'
-    pp tags
     latest_tag = tags.map { |tag| Semantic::Version.new(tag.name) }.max
-    pp latest_tag
     next_tag = latest_tag.rc!
-    pp next_tag
     repo.add_tag(next_tag.to_s)
     repo.push('origin', 'master', tags: true)
   end
