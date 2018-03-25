@@ -2,6 +2,7 @@ module Semantic
   class Version
     def rc!
       if @pre.nil?
+        increment!(:minor)
         @pre = 'rc.1'
         return
       end
