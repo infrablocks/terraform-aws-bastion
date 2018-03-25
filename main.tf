@@ -13,7 +13,7 @@ data "aws_ami" "amazon_linux" {
 }
 
 resource "aws_key_pair" "bastion" {
-  key_name = "${var.component}-${var.deployment_identifier}"
+  key_name = "bastion-${var.component}-${var.deployment_identifier}"
   public_key = "${file(var.ssh_public_key_path)}"
 }
 
@@ -24,7 +24,7 @@ resource "aws_launch_configuration" "bastion" {
   key_name = "${aws_key_pair.bastion.key_name}"
 
   security_groups = [
-    "${aws_security_group.bastion.id}"
+    "${aws_security_group.allow_ssh_to_bastion.id}"
   ]
 
   lifecycle {
@@ -49,11 +49,11 @@ resource "aws_autoscaling_group" "bastion" {
 
   tag {
     key = "Name"
-    value = "${var.component}-${var.deployment_identifier}"
+    value = "bastion-${var.component}-${var.deployment_identifier}"
     propagate_at_launch = true
   }
 
-  tag{
+  tag {
     key = "Component"
     value = "${var.component}"
     propagate_at_launch = true
@@ -65,21 +65,22 @@ resource "aws_autoscaling_group" "bastion" {
     propagate_at_launch = true
   }
 
-  tag{
+  tag {
     key = "Role"
     value = "bastion"
     propagate_at_launch = true
   }
 }
 
-resource "aws_security_group" "bastion" {
-  name = "${var.component}-${var.deployment_identifier}"
+resource "aws_security_group" "allow_ssh_to_bastion" {
+  name = "allow-ssh-to-bastion-${var.component}-${var.deployment_identifier}"
   vpc_id = "${var.vpc_id}"
 
   tags {
-    Name = "${var.component}-${var.deployment_identifier}"
+    Name = "allow-ssh-to-bastion-${var.component}-${var.deployment_identifier}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"
+    Role = "bastion"
   }
 
   ingress {
@@ -101,14 +102,15 @@ resource "aws_security_group" "bastion" {
   }
 }
 
-resource "aws_security_group" "open_to_bastion" {
-  name = "open-to-bastion-${var.component}-${var.deployment_identifier}"
+resource "aws_security_group" "allow_ssh_from_bastion" {
+  name = "allow-ssh-from-bastion-${var.component}-${var.deployment_identifier}"
   vpc_id = "${var.vpc_id}"
 
   tags {
-    Name = "open-to-bastion-${var.component}-${var.deployment_identifier}"
+    Name = "allow-ssh-from-bastion-${var.component}-${var.deployment_identifier}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"
+    Role = "bastion"
   }
 
   ingress {
@@ -116,7 +118,7 @@ resource "aws_security_group" "open_to_bastion" {
     to_port = 22
     protocol = "tcp"
     security_groups = [
-      "${aws_security_group.bastion.id}"
+      "${aws_security_group.allow_ssh_to_bastion.id}"
     ]
   }
 }
