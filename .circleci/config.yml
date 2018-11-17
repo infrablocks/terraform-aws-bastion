@@ -9,7 +9,7 @@ jobs:
       - run: ./scripts/ci/common/install-git-crypt.sh
       - run: ./scripts/ci/steps/test.sh
   prerelease:
-    working_directory: ~/terraform-aws-base-networking
+    working_directory: ~/terraform-aws-bastion
     docker:
       - image: ruby:2.3.1
     steps:
@@ -17,7 +17,7 @@ jobs:
       - run: ./scripts/ci/common/install-git-crypt.sh
       - run: ./scripts/ci/steps/prerelease.sh
   release:
-    working_directory: ~/terraform-aws-base-networking
+    working_directory: ~/terraform-aws-bastion
     docker:
       - image: ruby:2.3.1
     steps:
