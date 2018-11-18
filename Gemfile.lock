@@ -686,7 +686,7 @@ PLATFORMS
 
 DEPENDENCIES
   awspec (~> 1.12)
-  git (~> 1.3)
+  git (~> 1.5)
   lino (~> 1.1)
   net-ssh (~> 4.0)
   netaddr (~> 1.5)
