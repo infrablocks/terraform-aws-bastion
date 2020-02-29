@@ -40,9 +40,9 @@ describe 'bastion' do
 
     it { should exist }
 
-    its(:min_size) { should eq(vars.minimum_instances) }
-    its(:max_size) { should eq(vars.maximum_instances) }
-    its(:desired_capacity) { should eq(vars.desired_instances) }
+    its(:min_size) { should eq(vars.minimum_instances.to_i) }
+    its(:max_size) { should eq(vars.maximum_instances.to_i) }
+    its(:desired_capacity) { should eq(vars.desired_instances.to_i) }
 
     its(:launch_configuration_name) do
       should eq(output_for(:harness, 'launch_configuration_name'))
