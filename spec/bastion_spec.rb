@@ -9,9 +9,9 @@ describe 'bastion' do
           output_for(:harness, 'launch_configuration_name'))
     }
 
-    it {should exist}
-    its(:instance_type) {should eq(vars.instance_type)}
-    its(:image_id) {should eq(vars.ami)}
+    it { should exist }
+    its(:instance_type) { should eq(vars.instance_type) }
+    its(:image_id) { should eq(vars.ami) }
 
     its(:key_name) do
       should eq("bastion-#{vars.component}-#{vars.deployment_identifier}")
@@ -19,7 +19,7 @@ describe 'bastion' do
 
     it {
       should have_security_group(
-                 "allow-ssh-to-bastion-#{vars.component}-#{vars.deployment_identifier}")
+          "allow-ssh-to-bastion-#{vars.component}-#{vars.deployment_identifier}")
     }
 
     it 'has a name containing the component and deployment_identifier' do
@@ -38,11 +38,11 @@ describe 'bastion' do
       autoscaling_group("#{vars.component}-#{vars.deployment_identifier}")
     }
 
-    it {should exist}
+    it { should exist }
 
-    its(:min_size) {should eq(vars.minimum_instances)}
-    its(:max_size) {should eq(vars.maximum_instances)}
-    its(:desired_capacity) {should eq(vars.desired_instances)}
+    its(:min_size) { should eq(vars.minimum_instances) }
+    its(:max_size) { should eq(vars.maximum_instances) }
+    its(:desired_capacity) { should eq(vars.desired_instances) }
 
     its(:launch_configuration_name) do
       should eq(output_for(:harness, 'launch_configuration_name'))
@@ -51,7 +51,7 @@ describe 'bastion' do
     it 'uses the provided subnets' do
       expect(subject.vpc_zone_identifier.split(','))
           .to(contain_exactly(
-                  *output_for(:prerequisites, 'private_subnet_ids').split(',')))
+              *output_for(:prerequisites, 'private_subnet_ids', parse: true)))
     end
 
     it 'uses the provided load balancer names' do
@@ -59,30 +59,30 @@ describe 'bastion' do
           .to(contain_exactly(output_for(:prerequisites, 'load_balancer_name')))
     end
 
-    it {should have_tag('Name')
-                   .value("bastion-#{vars.component}-#{vars.deployment_identifier}")}
-    it {should have_tag('Component')
-                   .value(vars.component)}
-    it {should have_tag('DeploymentIdentifier')
-                   .value(vars.deployment_identifier)}
-    it {should have_tag('Role')
-                   .value('bastion')}
+    it { should have_tag('Name')
+        .value("bastion-#{vars.component}-#{vars.deployment_identifier}") }
+    it { should have_tag('Component')
+        .value(vars.component) }
+    it { should have_tag('DeploymentIdentifier')
+        .value(vars.deployment_identifier) }
+    it { should have_tag('Role')
+        .value('bastion') }
   end
 
   context 'allow-ssh-to-bastion security group' do
-    subject {security_group(
-        output_for(:harness, 'allow_ssh_to_bastion_security_group_id'))}
+    subject { security_group(
+        output_for(:harness, 'allow_ssh_to_bastion_security_group_id')) }
 
-    it {should exist}
+    it { should exist }
 
-    it {should have_tag('Name')
-                   .value("allow-ssh-to-bastion-#{vars.component}-#{vars.deployment_identifier}")}
-    it {should have_tag('Component')
-                   .value(vars.component)}
-    it {should have_tag('DeploymentIdentifier')
-                   .value(vars.deployment_identifier)}
+    it { should have_tag('Name')
+        .value("allow-ssh-to-bastion-#{vars.component}-#{vars.deployment_identifier}") }
+    it { should have_tag('Component')
+        .value(vars.component) }
+    it { should have_tag('DeploymentIdentifier')
+        .value(vars.deployment_identifier) }
 
-    its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
+    its(:vpc_id) { should eq(output_for(:prerequisites, 'vpc_id')) }
 
     it 'allows inbound SSH for each supplied CIDR' do
       allowed_cidrs = vars.allowed_cidrs
@@ -126,16 +126,16 @@ describe 'bastion' do
           output_for(:harness, 'allow_ssh_to_bastion_security_group_id'))
     }
 
-    it {should exist}
+    it { should exist }
 
-    it {should have_tag('Name')
-                   .value("allow-ssh-from-bastion-#{vars.component}-#{vars.deployment_identifier}")}
-    it {should have_tag('Component')
-                   .value(vars.component)}
-    it {should have_tag('DeploymentIdentifier')
-                   .value(vars.deployment_identifier)}
+    it { should have_tag('Name')
+        .value("allow-ssh-from-bastion-#{vars.component}-#{vars.deployment_identifier}") }
+    it { should have_tag('Component')
+        .value(vars.component) }
+    it { should have_tag('DeploymentIdentifier')
+        .value(vars.deployment_identifier) }
 
-    its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
+    its(:vpc_id) { should eq(output_for(:prerequisites, 'vpc_id')) }
 
     it 'allows inbound SSH from the bastion' do
       permission = subject.ip_permissions.find do |permission|
@@ -161,11 +161,17 @@ describe 'bastion' do
       expect {
         while !succeeded && attempts > 0
           begin
+            user = configuration.for(:harness).connection[:user]
+            ssh_private_key_path =
+                configuration.for(:harness).connection[:ssh_private_key_path]
+            domain_name = configuration.for(:harness).connection[:domain_name]
+            address =
+                "#{vars.component}-#{vars.deployment_identifier}.#{domain_name}"
             ssh = Net::SSH.start(
-                "#{vars.component}-#{vars.deployment_identifier}.#{vars.domain_name}",
-                user = vars.user,
+                address,
+                user,
                 options = {
-                    keys: vars.ssh_private_key_path,
+                    keys: ssh_private_key_path,
                     verbose: :info,
                     paranoid: false
                 })

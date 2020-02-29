@@ -1,0 +1,26 @@
+---
+source_directory: "spec/infra/harness"
+state_file: "%{hiera('project_directory')}/state/harness.tfstate"
+
+connection:
+  user: "%{hiera('instance_user')}"
+  domain_name: "%{hiera('domain_name')}"
+  ssh_private_key_path: "%{hiera('ssh_private_key_path')}"
+
+vars:
+  region: "%{hiera('region')}"
+
+  component: "%{hiera('component')}"
+  deployment_identifier: "%{hiera('deployment_identifier')}"
+
+
+  allowed_cidrs: "%{hiera('allowed_cidrs')}"
+  egress_cidrs: "%{hiera('egress_cidrs')}"
+
+  ami: "%{hiera('ami')}"
+  instance_type: "%{hiera('instance_type')}"
+  ssh_public_key_path: "%{hiera('ssh_public_key_path')}"
+
+  minimum_instances: "%{hiera('minimum_instances')}"
+  maximum_instances: "%{hiera('maximum_instances')}"
+  desired_instances: "%{hiera('desired_instances')}"

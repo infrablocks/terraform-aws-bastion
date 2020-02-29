@@ -1,0 +1,58 @@
+---
+region: 'eu-west-2'
+
+component: 'bastion'
+deployment_identifier: "%{hiera('deployment_identifier')}"
+
+work_directory: 'build'
+configuration_directory: "%{hiera('work_directory')}/%{hiera('source_directory')}"
+
+domain_name: 'greasedscone.uk'
+
+allowed_cidrs:
+  - '0.0.0.0/0'
+egress_cidrs:
+  - '10.0.0.0/8'
+  - '192.168.0.0/16'
+
+ami: 'ami-bb373ddf'
+instance_user: 'centos'
+instance_type: 't2.medium'
+ssh_public_key_path: "%{hiera('project_directory')}/config/secrets/keys/bastion/ssh.public"
+ssh_private_key_path: "%{hiera('project_directory')}/config/secrets/keys/bastion/ssh.private"
+
+minimum_instances: 1
+maximum_instances: 1
+desired_instances: 1
+
+vpc_cidr: '10.1.0.0/16'
+availability_zones:
+  - "eu-west-2a"
+  - "eu-west-2b"
+
+dependencies:
+  - "other"
+  - "stuff"
+
+public_zone_id: 'Z4Q2X3ESOZT4N'
+private_zone_id: 'Z2CDAFD23Q10HO'
+
+listeners:
+  - lb_port: 22
+    lb_protocol: "TCP"
+    instance_port: 22
+    instance_protocol: "TCP"
+    ssl_certificate_id: ""
+
+access_control:
+  - lb_port: 22
+    instance_port: 22
+    allow_cidrs:
+      - "%{hiera('public_address')}/32"
+
+health_check_target: 'TCP:22'
+
+include_public_dns_record: "yes"
+include_private_dns_record: "yes"
+
+expose_to_public_internet: "yes"

@@ -1,0 +1,31 @@
+---
+source_directory: "spec/infra/prerequisites"
+state_file: "%{hiera('project_directory')}/state/prerequisites.tfstate"
+vars:
+  region: "%{hiera('region')}"
+
+  vpc_cidr: "%{hiera('vpc_cidr')}"
+  availability_zones: "%{hiera('availability_zones')}"
+
+  component: "%{hiera('component')}"
+  deployment_identifier: "%{hiera('deployment_identifier')}"
+  dependencies: "%{hiera('dependencies')}"
+
+  domain_name: "%{hiera('domain_name')}"
+  public_zone_id: "%{hiera('public_zone_id')}"
+  private_zone_id: "%{hiera('private_zone_id')}"
+
+  infrastructure_events_bucket: "%{hiera('infrastructure_events_bucket')}"
+
+  listeners: "%{hiera('listeners')}"
+
+  access_control: "%{hiera('access_control')}"
+
+  health_check_target: "%{hiera('health_check_target')}"
+
+  include_public_dns_record: "%{hiera('include_public_dns_record')}"
+  include_private_dns_record: "%{hiera('include_private_dns_record')}"
+
+  expose_to_public_internet: "%{hiera('expose_to_public_internet')}"
+
+  egress_cidrs: "%{hiera('egress_cidrs')}"
