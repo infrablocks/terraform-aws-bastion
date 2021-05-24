@@ -18,8 +18,8 @@ egress_cidrs:
 ami: 'ami-bb373ddf'
 instance_user: 'centos'
 instance_type: 't2.medium'
-ssh_public_key_path: "%{hiera('project_directory')}/config/secrets/keys/bastion/ssh.public"
-ssh_private_key_path: "%{hiera('project_directory')}/config/secrets/keys/bastion/ssh.private"
+ssh_public_key_path: "%{hiera('project_directory')}/config/secrets/bastion/ssh.public"
+ssh_private_key_path: "%{hiera('project_directory')}/config/secrets/bastion/ssh.private"
 
 minimum_instances: 1
 maximum_instances: 1

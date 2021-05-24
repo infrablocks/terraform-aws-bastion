@@ -56,6 +56,13 @@ namespace :keys do
     )
   end
 
+  namespace :bastion do
+    RakeSSH.define_key_tasks(
+      path: 'config/secrets/bastion/',
+      comment: 'maintainers@infrablocks.io'
+    )
+  end
+
   namespace :secrets do
     namespace :gpg do
       RakeGPG.define_generate_key_task(
@@ -74,6 +81,7 @@ namespace :secrets do
   task regenerate: %w[
     encryption:passphrase:generate
     keys:deploy:generate
+    keys:bastion:generate
     keys:secrets:generate
   ]
 end
