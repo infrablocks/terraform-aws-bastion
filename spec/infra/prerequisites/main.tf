@@ -1,6 +1,6 @@
 module "base_network" {
   source  = "infrablocks/base-networking/aws"
-  version = "3.0.0"
+  version = "4.0.0"
 
   region = var.region
   vpc_cidr = var.vpc_cidr
@@ -15,7 +15,7 @@ module "base_network" {
 
 module "classic_load_balancer" {
   source  = "infrablocks/classic-load-balancer/aws"
-  version = "1.4.0-rc.1"
+  version = "2.0.0"
 
   vpc_id = module.base_network.vpc_id
   subnet_ids = module.base_network.public_subnet_ids
