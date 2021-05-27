@@ -65,6 +65,9 @@ module will create everything you need. See the
 [docs](https://github.com/infrablocks/terraform-aws-classic-load-balancer/blob/master/README.md)
 for usage instructions.
 
+See the 
+[Terraform registry entry](https://registry.terraform.io/modules/infrablocks/bastion/aws/latest) 
+for more details.
 
 ### Inputs
 
@@ -96,6 +99,10 @@ for usage instructions.
 | bastion_security_group_id                | (deprecated)                                                         |
 | open_to_bastion_security_group_id        | (deprecated)                                                         |
 
+### Compatibility
+
+This module is compatible with Terraform versions greater than or equal to 
+Terraform 0.14.
 
 Development
 -----------
@@ -221,7 +228,7 @@ Contributing
 ------------
 
 Bug reports and pull requests are welcome on GitHub at 
-https://github.com/tobyclemson/terraform-aws-bastion. 
+https://github.com/infrablocks/terraform-aws-bastion. 
 This project is intended to be a safe, welcoming space for collaboration, and
 contributors are expected to adhere to the
 [Contributor Covenant](http://contributor-covenant.org) code of conduct.
