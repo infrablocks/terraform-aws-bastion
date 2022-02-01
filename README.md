@@ -16,7 +16,7 @@ The bastion consists of:
 * A security group allowing SSH access to the bastion from the load balancers.
 * A security group allowing SSH access from the bastion, for assigning to protected instances.
 
-![Diagram of infrastructure managed by this module](https://raw.githubusercontent.com/infrablocks/terraform-aws-bastion/master/docs/architecture.png)
+![Diagram of infrastructure managed by this module](https://raw.githubusercontent.com/infrablocks/terraform-aws-bastion/main/docs/architecture.png)
 
 Usage
 -----
@@ -55,14 +55,14 @@ As mentioned above, the bastion deploys into an existing base network.
 Whilst the base network can be created using any mechanism you like, the 
 [AWS Base Networking](https://github.com/infrablocks/terraform-aws-base-networking)
 module will create everything you need. See the 
-[docs](https://github.com/infrablocks/terraform-aws-base-networking/blob/master/README.md)
+[docs](https://github.com/infrablocks/terraform-aws-base-networking/blob/main/README.md)
 for usage instructions.
 
 Similarly, the bastion is reachable through one or more load balancers.
 Whilst the load balancers can be created using any mechanism you like, the
 [AWS Classic Load Balancer](https://github.com/infrablocks/terraform-aws-classic-load-balancer)
 module will create everything you need. See the 
-[docs](https://github.com/infrablocks/terraform-aws-classic-load-balancer/blob/master/README.md)
+[docs](https://github.com/infrablocks/terraform-aws-classic-load-balancer/blob/main/README.md)
 for usage instructions.
 
 See the 
