@@ -70,21 +70,22 @@ for more details.
 
 ### Inputs
 
-| Name                  | Description                                                       | Default | Required |
-|-----------------------|-------------------------------------------------------------------|:-------:|:--------:|
-| vpc_id                | The ID of the VPC the bastion should be deployed into             |    -    |   yes    |
-| subnet_ids            | The IDs of the subnets the bastion should deploy into             |    -    |   yes    |
-| component             | The name of this component                                        |    -    |   yes    |
-| deployment_identifier | An identifier for this instantiation                              |    -    |   yes    |
-| ami                   | The ID of the AMI for the bastion instances                       |    -    |   yes    |
-| instance_type         | The instance type of the bastion instances                        | t2.nano |   yes    |
-| ssh_public_key_path   | The absolute path of the SSH public key to use for bastion access |    -    |   yes    |
-| allowed_cidrs         | The CIDRs that are allowed to access the bastion (list)           |    -    |   yes    |
-| egress_cidrs          | The CIDRs that are reachable from the bastion (list)              |    -    |   yes    |
-| load_balancer_names   | The names of the load balancers to update on autoscaling events   |   []    |    no    |
-| minimum_instances     | The minimum number of bastion instances                           |    1    |    no    |
-| maximum_instances     | The maximum number of bastion instances                           |    1    |    no    |
-| desired_instances     | The desired number of bastion instances                           |    1    |    no    |
+| Name                        | Description                                                       | Default | Required |
+|-----------------------------|-------------------------------------------------------------------|:-------:|:--------:|
+| vpc_id                      | The ID of the VPC the bastion should be deployed into             |    -    |   yes    |
+| subnet_ids                  | The IDs of the subnets the bastion should deploy into             |    -    |   yes    |
+| component                   | The name of this component                                        |    -    |   yes    |
+| deployment_identifier       | An identifier for this instantiation                              |    -    |   yes    |
+| ami                         | The ID of the AMI for the bastion instances                       |    -    |   yes    |
+| instance_type               | The instance type of the bastion instances                        | t2.nano |   yes    |
+| ssh_public_key_path         | The absolute path of the SSH public key to use for bastion access |    -    |   yes    |
+| allowed_cidrs               | The CIDRs that are allowed to access the bastion (list)           |    -    |   yes    |
+| egress_cidrs                | The CIDRs that are reachable from the bastion (list)              |    -    |   yes    |
+| load_balancer_names         | The names of the load balancers to update on autoscaling events   |   []    |    no    |
+| minimum_instances           | The minimum number of bastion instances                           |    1    |    no    |
+| maximum_instances           | The maximum number of bastion instances                           |    1    |    no    |
+| desired_instances           | The desired number of bastion instances                           |    1    |    no    |
+| associate_public_ip_address | Associate a public ip address with an instance in a VPC           |  false  |    no    |
 
 
 ### Outputs

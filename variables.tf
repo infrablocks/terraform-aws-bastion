@@ -60,3 +60,9 @@ variable "desired_instances" {
   type = number
   default = 1
 }
+
+variable "associate_public_ip_address" {
+  description = "Associate a public ip address with an instance in a VPC."
+  type = bool
+  default = false
+}
