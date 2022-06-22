@@ -20,6 +20,7 @@ resource "aws_launch_configuration" "bastion" {
   image_id = coalesce(var.ami, data.aws_ami.amazon_linux_2.id)
   instance_type = var.instance_type
   key_name = aws_key_pair.bastion.key_name
+  associate_public_ip_address = var.associate_public_ip_address
 
   security_groups = [
     aws_security_group.allow_ssh_to_bastion.id
