@@ -28,7 +28,6 @@ module "bastion" {
   source  = "infrablocks/bastion/aws"
   version = "0.1.2"
   
-  region = "eu-west-2"
   vpc_id = "vpc-fb7dc365"
   subnet_ids = "subnet-ae4533c4,subnet-443e6b12"
   
@@ -73,7 +72,6 @@ for more details.
 
 | Name                  | Description                                                       | Default | Required |
 |-----------------------|-------------------------------------------------------------------|:-------:|:--------:|
-| region                | The region into which to deploy the bastion                       |    -    |   yes    |
 | vpc_id                | The ID of the VPC the bastion should be deployed into             |    -    |   yes    |
 | subnet_ids            | The IDs of the subnets the bastion should deploy into             |    -    |   yes    |
 | component             | The name of this component                                        |    -    |   yes    |
