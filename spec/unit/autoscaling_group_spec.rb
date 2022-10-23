@@ -122,7 +122,8 @@ describe 'autoscaling group' do
     it 'uses the provided subnet IDs as the VPC zone identifier' do
       expect(@plan)
         .to(include_resource_creation(type: 'aws_autoscaling_group')
-              .with_attribute_value(:vpc_zone_identifier, private_subnet_ids))
+              .with_attribute_value(
+                :vpc_zone_identifier, containing_exactly(*private_subnet_ids)))
     end
   end
 end
