@@ -1,0 +1,13 @@
+---
+configuration_directory: "%{cwd}/spec/unit/infra/root"
+state_file: "%{cwd}/state/root.tfstate"
+vars:
+  region: "%{hiera('region')}"
+
+  component: "%{hiera('component')}"
+  deployment_identifier: "%{hiera('deployment_identifier')}"
+
+  ssh_public_key_path: "%{hiera('ssh_public_key_path')}"
+
+  allowed_cidrs: "%{hiera('allowed_cidrs')}"
+  egress_cidrs: "%{hiera('egress_cidrs')}"

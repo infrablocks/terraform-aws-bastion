@@ -1,6 +1,6 @@
 ---
-configuration_directory: "%{cwd}/spec/unit/infra/prerequisites"
-state_file: "%{cwd}/state/prerequisites.tfstate"
+configuration_directory: "%{cwd}/examples/full"
+state_file: "%{cwd}/state/full.tfstate"
 vars:
   region: "%{hiera('region')}"
 
@@ -25,4 +25,7 @@ vars:
 
   expose_to_public_internet: "%{hiera('expose_to_public_internet')}"
 
+  ssh_public_key_path: "%{hiera('ssh_public_key_path')}"
+
+  allowed_cidrs: "%{hiera('allowed_cidrs')}"
   egress_cidrs: "%{hiera('egress_cidrs')}"

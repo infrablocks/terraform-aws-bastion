@@ -7,8 +7,7 @@ data "terraform_remote_state" "prerequisites" {
 }
 
 module "bastion" {
-  # This makes absolutely no sense. I think there's a bug in terraform.
-  source = "./../../../../../../../"
+  source = "../../../.."
 
   vpc_id = data.terraform_remote_state.prerequisites.outputs.vpc_id
   subnet_ids = data.terraform_remote_state.prerequisites.outputs.private_subnet_ids
@@ -29,4 +28,6 @@ module "bastion" {
   minimum_instances = var.minimum_instances
   maximum_instances = var.maximum_instances
   desired_instances = var.desired_instances
+
+  associate_public_ip_address = var.associate_public_ip_address
 }

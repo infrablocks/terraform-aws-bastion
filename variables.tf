@@ -5,6 +5,7 @@ variable "vpc_id" {
 variable "subnet_ids" {
   description = "The IDs of the subnets the bastion should deploy into."
   type = list(string)
+  default = null
 }
 
 variable "component" {
@@ -19,11 +20,12 @@ variable "deployment_identifier" {
 variable "ami" {
   description = "The ID of the AMI for the bastion instances."
   type = string
+  default = null
 }
 variable "instance_type" {
   description = "The instance type of the bastion instances."
   type = string
-  default = "t2.nano"
+  default = "t4g.nano"
 }
 variable "ssh_public_key_path" {
   description = "The absolute path of the SSH public key to use for bastion access."

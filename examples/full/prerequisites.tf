@@ -8,7 +8,6 @@ module "base_network" {
 
   component = "${var.component}-net"
   deployment_identifier = var.deployment_identifier
-  dependencies = var.dependencies
 
   private_zone_id = var.private_zone_id
 }

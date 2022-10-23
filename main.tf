@@ -6,7 +6,7 @@ data "aws_ami" "amazon_linux_2" {
 
   filter {
     name = "name"
-    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
+    values = ["amzn2-ami-ecs-hvm-*-arm64-ebs"]
   }
 }
 
@@ -18,9 +18,9 @@ resource "aws_key_pair" "bastion" {
 resource "aws_launch_configuration" "bastion" {
   name_prefix = "${var.component}-${var.deployment_identifier}"
   image_id = coalesce(var.ami, data.aws_ami.amazon_linux_2.id)
-  instance_type = var.instance_type
+  instance_type = local.instance_type
   key_name = aws_key_pair.bastion.key_name
-  associate_public_ip_address = var.associate_public_ip_address
+  associate_public_ip_address = local.associate_public_ip_address
 
   security_groups = [
     aws_security_group.allow_ssh_to_bastion.id
@@ -40,9 +40,9 @@ resource "aws_autoscaling_group" "bastion" {
 
   load_balancers = var.load_balancer_names
 
-  min_size = var.minimum_instances
-  max_size = var.maximum_instances
-  desired_capacity = var.desired_instances
+  min_size = local.minimum_instances
+  max_size = local.maximum_instances
+  desired_capacity = local.desired_instances
 
   tag {
     key = "Name"

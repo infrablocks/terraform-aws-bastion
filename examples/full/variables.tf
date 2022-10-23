@@ -6,15 +6,10 @@ variable "availability_zones" {
 
 variable "component" {}
 variable "deployment_identifier" {}
-variable "dependencies" {
-  type = list(string)
-}
 
 variable "domain_name" {}
 variable "public_zone_id" {}
 variable "private_zone_id" {}
-
-variable "infrastructure_events_bucket" {}
 
 variable "listeners" {
   type = list(object({
@@ -35,11 +30,16 @@ variable "access_control" {
 
 variable "health_check_target" {}
 
-variable "egress_cidrs" {
-  type = list(string)
-}
-
 variable "include_public_dns_record" {}
 variable "include_private_dns_record" {}
 
 variable "expose_to_public_internet" {}
+
+variable "ssh_public_key_path" {}
+
+variable "allowed_cidrs" {
+  type = list(string)
+}
+variable "egress_cidrs" {
+  type = list(string)
+}
