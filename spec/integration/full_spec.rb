@@ -98,9 +98,7 @@ describe 'full example' do
 
     it 'uses the provided subnets' do
       expect(created_asg.vpc_zone_identifier.split(','))
-        .to(contain_exactly(
-              *private_subnet_ids
-            ))
+        .to(match_array(private_subnet_ids))
     end
 
     it 'uses the provided load balancer names' do
